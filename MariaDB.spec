@@ -8,7 +8,11 @@
 # -*- rpm-spec -*-
 Summary:        MariaDB: a very fast and robust SQL database server
 Name:           MariaDB
+%if "0%{?_version}" == "0"
 Version:        10.4.32
+%else
+Version:        %{_version}
+%endif
 Release:        4%{?dist}
 License:        GPLv2
 Group:          Applications/Databases
@@ -103,7 +107,7 @@ export LDFLAGS="${LDFLAGS} -static-intel"
 source /opt/intel/oneapi/setvars.sh
 %endif
 
-'/usr/bin/cmake'  -DRPM=rhel9 \
+'/usr/bin/cmake'  -DRPM=rh%{suffix:%dist} \
                   -DLZ4_LIBS=%{_libdir}/liblz4.so \
                   -DWITH_INNODB_LZ4=ON \
                   -DWITH_ROCKSDB_LZ4=ON \
