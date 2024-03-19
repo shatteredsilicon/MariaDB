@@ -38,4 +38,4 @@ $(RPM_FILES): $(SRPM_FILE)
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILDDIR)/*
+	rm -rf $(BUILDDIR)/{rpmbuild,mock,results}
