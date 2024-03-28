@@ -23,6 +23,8 @@ Source0:  https://github.com/MariaDB/server/archive/mariadb-%{version}/server-ma
 Source1:  https://github.com/MariaDB/mariadb-connector-c/archive/%{libmariadb_commit}/mariadb-connector-c-%{libmariadb_commit}.tar.gz
 Source2:  https://github.com/wolfSSL/wolfssl/archive/%{wolfssl_commit}/wolfssl-%{wolfssl_commit}.tar.gz
 
+Patch1: 0001-Allow-building-with-flto-flag.patch
+
 BuildRequires: bison boost-devel coreutils checkpolicy binutils cmake make libcurl-devel ncurses-devel systemtap-sdt-devel libevent-devel libaio-devel cracklib-devel glibc-devel zlib-devel xz-devel systemd-devel libxcrypt-devel java-1.8.0-openjdk java-1.8.0-openjdk-headless Judy-devel krb5-devel libxml2-devel libxml2 unixODBC-devel unixODBC openssl-devel pam-devel pkgconf-pkg-config readline-devel policycoreutils libzstd-devel snappy-devel lz4-devel gnutls-devel llvm lld clang gperftools-devel procps-ng
 
 %define debug_package %{nil}
@@ -78,6 +80,8 @@ MariaDB bug reports should be submitted through https://jira.mariadb.org
 mv -fT mariadb-connector-c-%{libmariadb_commit}* server-mariadb-%{version}/libmariadb
 %setup -q -T -D -a 2
 mv -fT wolfssl-%{wolfssl_commit}* server-mariadb-%{version}/extra/wolfssl/wolfssl
+
+%patch1 -p1 -d server-mariadb-%{version}/
 
 %build
 mkdir cpack_rpm_build_dir
