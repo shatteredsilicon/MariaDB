@@ -51,11 +51,7 @@ BuildRequires: bison boost-devel coreutils checkpolicy binutils cmake make libcu
 %filter_provides_in \.\(test\|result\|h\|cc\|c\|inc\|opt\|ic\|cnf\|rdiff\|cpp\)$
 %filter_requires_in \.\(test\|result\|h\|cc\|c\|inc\|opt\|ic\|cnf\|rdiff\|cpp\)$
 %filter_from_provides /perl(\(mtr\|My::\)/d
-%ifarch x86_64
-%filter_from_requires /\(lib\(ft\|lzma\|tokuportability\|imf\)\)\|\(perl(\(.*mtr\|My::\|.*HandlerSocket\|Mysql\)\)/d
-%else
 %filter_from_requires /\(lib\(ft\|lzma\|tokuportability\)\)\|\(perl(\(.*mtr\|My::\|.*HandlerSocket\|Mysql\)\)/d
-%endif
 %filter_setup
 }
 
