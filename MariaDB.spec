@@ -23,14 +23,7 @@ Source0:  https://github.com/MariaDB/server/archive/mariadb-%{version}/server-ma
 Source1:  https://github.com/MariaDB/mariadb-connector-c/archive/%{libmariadb_commit}/mariadb-connector-c-%{libmariadb_commit}.tar.gz
 Source2:  https://github.com/wolfSSL/wolfssl/archive/%{wolfssl_commit}/wolfssl-%{wolfssl_commit}.tar.gz
 
-Patch0: 0000-Ignore-RPM-Requires-libimf-for-Intel-compiler.patch
-Patch1: 0001-Allow-building-with-flto-flag.patch
-
-BuildRequires: bison boost-devel coreutils checkpolicy binutils cmake gcc-c++ gcc make libcurl-devel ncurses-devel systemtap-sdt-devel libevent-devel libaio-devel cracklib-devel glibc-devel zlib-devel xz-devel systemd-devel libxcrypt-devel java-1.8.0-openjdk java-1.8.0-openjdk-headless Judy-devel krb5-devel libxml2-devel libxml2 unixODBC-devel unixODBC openssl-devel pam-devel pkgconf-pkg-config readline-devel policycoreutils libzstd-devel snappy-devel lz4-devel gnutls-devel llvm lld gperftools-devel
-
-%ifarch x86_64
-BuildRequires: intel-oneapi-compiler-dpcpp-cpp procps-ng
-%endif
+BuildRequires: bison boost-devel coreutils checkpolicy binutils cmake make libcurl-devel ncurses-devel systemtap-sdt-devel libevent-devel libaio-devel cracklib-devel glibc-devel zlib-devel xz-devel systemd-devel libxcrypt-devel java-1.8.0-openjdk java-1.8.0-openjdk-headless Judy-devel krb5-devel libxml2-devel libxml2 unixODBC-devel unixODBC openssl-devel pam-devel pkgconf-pkg-config readline-devel policycoreutils libzstd-devel snappy-devel lz4-devel gnutls-devel llvm lld clang gperftools-devel procps-ng
 
 %define debug_package %{nil}
 
@@ -90,21 +83,14 @@ mv -fT mariadb-connector-c-%{libmariadb_commit}* server-mariadb-%{version}/libma
 %setup -q -T -D -a 2
 mv -fT wolfssl-%{wolfssl_commit}* server-mariadb-%{version}/extra/wolfssl/wolfssl
 
-%ifarch x86_64
-%patch0 -p1 -d server-mariadb-%{version}/
-%patch1 -p1 -d server-mariadb-%{version}/
-%endif
-
 %build
 mkdir cpack_rpm_build_dir
 cd cpack_rpm_build_dir
-export CPPFLAGS='-ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wno-unused-command-line-argument -fuse-ld=lld'
+export CPPFLAGS='-ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wno-unused-command-line-argument -fuse-ld=lld -fvectorize -fslp-vectorize -fwhole-program-vtables -flto'
 export LDFLAGS='-Wl,--gc-sections -Wl,--strip-all'
 
 %ifarch x86_64
-export CPPFLAGS="${CPPFLAGS} -qopt-dynamic-align -static-intel -vec -fslp-vectorize -fvec-peel-loops -fwhole-program-vtables -march=x86-64-v2 -mtune=westmere -msse4.2 -flto"
-export LDFLAGS="${LDFLAGS} -static-intel"
-source /opt/intel/oneapi/setvars.sh
+export CPPFLAGS="${CPPFLAGS} -march=x86-64-v2 -mtune=westmere"
 %endif
 
 '/usr/bin/cmake'  -DRPM=rh%{suffix:%dist} \
@@ -112,12 +98,10 @@ source /opt/intel/oneapi/setvars.sh
                   -DWITH_INNODB_LZ4=ON \
                   -DWITH_ROCKSDB_LZ4=ON \
                   -DCMAKE_BUILD_TYPE=Release \
-%ifarch x86_64
-                  -DCMAKE_C_COMPILER=/opt/intel/oneapi/compiler/latest/bin/icx \
-                  -DCMAKE_CXX_COMPILER=/opt/intel/oneapi/compiler/latest/bin/icpx \
-                  -DCMAKE_LINKER=/opt/intel/oneapi/compiler/latest/bin/xild \
-                  -DCMAKE_AR=/opt/intel/oneapi/compiler/latest/bin/xiar \
-%endif
+                  -DCMAKE_C_COMPILER=/usr/bin/clang \
+                  -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+                  -DCMAKE_LINKER=/usr/bin/lld \
+                  -DCMAKE_AR=/usr/bin/llvm-ar \
                   -DCMAKE_C_FLAGS="$CPPFLAGS" \
                   -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
                   -DCMAKE_EXE_LINKER_FLAGS="-ltcmalloc_minimal $LD_FLAGS" \
