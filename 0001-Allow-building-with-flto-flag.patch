@@ -1,26 +1,25 @@
-From c1806b9e168d7ebad164bfa5337c57742f3ae3d7 Mon Sep 17 00:00:00 2001
+From f98b6a14b88b44b6adb54ae6d50d86b96c2a6736 Mon Sep 17 00:00:00 2001
 From: Jason <oblitorum@gmail.com>
-Date: Fri, 19 Jan 2024 23:28:52 +0800
-Subject: [PATCH] Allow building with '-flto' flag
+Date: Sat, 30 Mar 2024 03:53:50 +0800
+Subject: [PATCH] Allow building with flto flag
 
 ---
- cmake/libutils.cmake | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ cmake/libutils.cmake | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/cmake/libutils.cmake b/cmake/libutils.cmake
-index 0f8786fc264..6e81a445589 100644
+index 0f8786fc264..eeb0a00a28c 100644
 --- a/cmake/libutils.cmake
 +++ b/cmake/libutils.cmake
-@@ -89,9 +89,9 @@ MACRO(CREATE_EXPORTS_FILE VAR TARGET API_FUNCTIONS)
+@@ -87,11 +87,6 @@ MACRO(CREATE_EXPORTS_FILE VAR TARGET API_FUNCTIONS)
+     ENDFOREACH()
+     SET(CONTENT "${CONTENT} (void *)0\n}\;")
      CONFIGURE_FILE_CONTENT(${CONTENT} ${EXPORTS})
-     # Avoid "function redeclared as variable" error
-     # when using gcc/clang option -flto(link time optimization)
+-    # Avoid "function redeclared as variable" error
+-    # when using gcc/clang option -flto(link time optimization)
 -    IF(" ${CMAKE_C_FLAGS} ${CMAKE_CXX_FLAGS} " MATCHES " -flto")
 -      SET_SOURCE_FILES_PROPERTIES(${EXPORTS} PROPERTIES COMPILE_FLAGS "-fno-lto")
 -    ENDIF()
-+    # IF(" ${CMAKE_C_FLAGS} ${CMAKE_CXX_FLAGS} " MATCHES " -flto")
-+    #   SET_SOURCE_FILES_PROPERTIES(${EXPORTS} PROPERTIES COMPILE_FLAGS "-fno-lto")
-+    # ENDIF()
      SET(${VAR} ${EXPORTS})
    ENDIF()
  ENDMACRO()
