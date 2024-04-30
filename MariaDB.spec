@@ -13,7 +13,11 @@ Version:        10.4.33
 %else
 Version:        %{_version}
 %endif
+%if "0%{?_release}" == "0"
 Release:        4%{?dist}
+%else
+Release:        %{_release}
+%endif
 License:        GPLv2
 Group:          Applications/Databases
 Vendor:         MariaDB Foundation
