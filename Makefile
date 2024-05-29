@@ -3,9 +3,10 @@ BUILDDIR	?= /tmp/ssmbuild
 ARCH	:= $(shell rpm --eval "%{_arch}")
 VERSION	?= $(shell rpmspec -q --queryformat="%{version}" MariaDB.spec)
 RELEASE	?= $(shell rpmspec -q --queryformat="%{release}" MariaDB.spec)
+DIST	:= $(shell rpmspec --eval "%{?dist}")
 
-SRPM_FILE		:= $(BUILDDIR)/results/SRPMS/MariaDB-$(VERSION)-$(RELEASE).src.rpm
-RPM_FILES		:= $(BUILDDIR)/results/RPMS/MariaDB-common-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-server-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-client-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-backup-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-connect-engine-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-cracklib-password-check-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-devel-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-gssapi-server-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-oqgraph-engine-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-shared-$(VERSION)-$(RELEASE).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-test-$(VERSION)-$(RELEASE).$(ARCH).rpm
+SRPM_FILE		:= $(BUILDDIR)/results/SRPMS/MariaDB-$(VERSION)-$(RELEASE)$(DIST).src.rpm
+RPM_FILES		:= $(BUILDDIR)/results/RPMS/MariaDB-common-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-server-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-client-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-backup-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-connect-engine-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-cracklib-password-check-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-devel-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-gssapi-server-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-oqgraph-engine-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-shared-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm $(BUILDDIR)/results/RPMS/MariaDB-test-$(VERSION)-$(RELEASE)$(DIST).$(ARCH).rpm
 
 .PHONY: all
 all: srpm rpm
