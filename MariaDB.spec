@@ -16,7 +16,7 @@ Version:        %{_version}
 %if "0%{?_release}" == "0"
 Release:        4%{?dist}
 %else
-Release:        %{_release}
+Release:        %{_release}%{?dist}
 %endif
 License:        GPLv2
 Group:          Applications/Databases
