@@ -2,14 +2,14 @@
 %undefine _debugsource_packages
 %undefine _debuginfo_subpackages
 
-%global libmariadb_commit 9155b19
-%global wolfssl_commit 66596ad
+%global libmariadb_commit 51b2a62
+%global wolfssl_commit 8970ff4
 
 # -*- rpm-spec -*-
 Summary:        MariaDB: a very fast and robust SQL database server
 Name:           MariaDB
 %if "0%{?_version}" == "0"
-Version:        10.4.33
+Version:        10.4.34
 %else
 Version:        %{_version}
 %endif
