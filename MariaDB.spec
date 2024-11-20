@@ -117,6 +117,8 @@ export CPPFLAGS="${CPPFLAGS} -march=x86-64-v2 -mtune=westmere"
                   -DWITH_WSREP=no \
                   -DWITH_UNIT_TESTS=no \
                   -DPLUGIN_TOKUDB=NO \
+                  -DPLUGIN_SPIDER=NO \
+                  -DPLUGIN_SPHINX=NO \
                   -DCPACK_PACKAGING_INSTALL_PREFIX=/ ../server-mariadb-%{version}
 make %{?_smp_mflags}
 
