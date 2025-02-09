@@ -9,7 +9,7 @@
 Summary:        MariaDB: a very fast and robust SQL database server
 Name:           MariaDB
 %if "0%{?_version}" == "0"
-Version:        10.4.34
+Version:        10.4.34.1
 %else
 Version:        %{_version}
 %endif
@@ -23,7 +23,7 @@ Group:          Applications/Databases
 Vendor:         MariaDB Foundation
 BuildRoot:      %_topdir/mariadb-%{version}
 
-Source0:  https://github.com/MariaDB/server/archive/mariadb-%{version}/server-mariadb-%{version}.tar.gz
+Source0:  https://github.com/shatteredsilicon/mariadb-server/archive/refs/tags/mariadb-%{version}.tar.gz
 Source1:  https://github.com/MariaDB/mariadb-connector-c/archive/%{libmariadb_commit}/mariadb-connector-c-%{libmariadb_commit}.tar.gz
 Source2:  https://github.com/wolfSSL/wolfssl/archive/%{wolfssl_commit}/wolfssl-%{wolfssl_commit}.tar.gz
 
@@ -131,6 +131,9 @@ mv *.rpm %_rpmdir
 %clean
 
 %changelog
+* Fri Jan 19 2024 Gordan Bobic <gordan@shatteredsilicon.net> - 10.4.34.1-1
+  Update 10.4.34 with backport of CVE-2025-21490
+
 * Fri Jan 19 2024 Gordan Bobic <gordan@shatteredsilicon.net> - 10.4.32-4
   Build time optimisations
 
