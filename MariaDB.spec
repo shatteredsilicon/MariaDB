@@ -81,11 +81,11 @@ MariaDB bug reports should be submitted through https://jira.mariadb.org
 %prep
 %setup -q -c
 %setup -q -T -D -a 1
-mv -fT mariadb-connector-c-%{libmariadb_commit}* server-mariadb-%{version}/libmariadb
+mv -fT mariadb-connector-c-%{libmariadb_commit}* mariadb-server-mariadb-%{version}/libmariadb
 %setup -q -T -D -a 2
-mv -fT wolfssl-%{wolfssl_commit}* server-mariadb-%{version}/extra/wolfssl/wolfssl
+mv -fT wolfssl-%{wolfssl_commit}* mariadb-server-mariadb-%{version}/extra/wolfssl/wolfssl
 
-%patch1 -p1 -d server-mariadb-%{version}/
+%patch1 -p1 -d mariadb-server-mariadb-%{version}/
 
 %build
 mkdir cpack_rpm_build_dir
@@ -119,7 +119,7 @@ export CPPFLAGS="${CPPFLAGS} -march=x86-64-v2 -mtune=westmere"
                   -DPLUGIN_TOKUDB=NO \
                   -DPLUGIN_SPIDER=NO \
                   -DPLUGIN_SPHINX=NO \
-                  -DCPACK_PACKAGING_INSTALL_PREFIX=/ ../server-mariadb-%{version}
+                  -DCPACK_PACKAGING_INSTALL_PREFIX=/ ../mariadb-server-mariadb-%{version}
 make %{?_smp_mflags}
 
 %install
