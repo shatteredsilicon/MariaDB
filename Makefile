@@ -1,7 +1,7 @@
 BUILDDIR	?= /tmp/ssmbuild
 
 ARCH	:= $(shell rpm --eval "%{_arch}")
-VERSION	?= $(shell rpmspec -q --queryformat="%{version}" MariaDB.spec)
+VERSION	:= $(shell rpmspec -q --queryformat="%{version}" MariaDB.spec)
 RELEASE	?= $(shell rpmspec -q --queryformat="%{release}" MariaDB.spec)
 DIST	:= $(shell rpmspec --eval "%{?dist}")
 
