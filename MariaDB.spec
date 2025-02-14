@@ -125,7 +125,7 @@ make %{?_smp_mflags}
 %install
 
 cd cpack_rpm_build_dir
-cpack -D CPACK_RPM_PACKAGE_RELEASE=%{release} -G RPM
+cpack -D CPACK_RPM_PACKAGE_VERSION=%{version} -D CPACK_RPM_PACKAGE_RELEASE=%{release} -G RPM
 mv *.rpm %_rpmdir
 
 %clean
