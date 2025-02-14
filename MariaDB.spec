@@ -4,6 +4,7 @@
 
 %global libmariadb_commit 51b2a62
 %global wolfssl_commit 8970ff4
+%global mariadb_version 10.4.34.1
 
 # -*- rpm-spec -*-
 Summary:        MariaDB: a very fast and robust SQL database server
@@ -23,7 +24,7 @@ Group:          Applications/Databases
 Vendor:         MariaDB Foundation
 BuildRoot:      %_topdir/mariadb-%{version}
 
-Source0:  https://github.com/shatteredsilicon/mariadb-server/archive/refs/tags/mariadb-%{version}.tar.gz
+Source0:  https://github.com/shatteredsilicon/mariadb-server/archive/refs/tags/mariadb-%{mariadb_version}.tar.gz
 Source1:  https://github.com/MariaDB/mariadb-connector-c/archive/%{libmariadb_commit}/mariadb-connector-c-%{libmariadb_commit}.tar.gz
 Source2:  https://github.com/wolfSSL/wolfssl/archive/%{wolfssl_commit}/wolfssl-%{wolfssl_commit}.tar.gz
 
@@ -81,11 +82,11 @@ MariaDB bug reports should be submitted through https://jira.mariadb.org
 %prep
 %setup -q -c
 %setup -q -T -D -a 1
-mv -fT mariadb-connector-c-%{libmariadb_commit}* mariadb-server-mariadb-%{version}/libmariadb
+mv -fT mariadb-connector-c-%{libmariadb_commit}* mariadb-server-mariadb-%{mariadb_version}/libmariadb
 %setup -q -T -D -a 2
-mv -fT wolfssl-%{wolfssl_commit}* mariadb-server-mariadb-%{version}/extra/wolfssl/wolfssl
+mv -fT wolfssl-%{wolfssl_commit}* mariadb-server-mariadb-%{mariadb_version}/extra/wolfssl/wolfssl
 
-%patch1 -p1 -d mariadb-server-mariadb-%{version}/
+%patch1 -p1 -d mariadb-server-mariadb-%{mariadb_version}/
 
 %build
 mkdir cpack_rpm_build_dir
@@ -119,7 +120,7 @@ export CPPFLAGS="${CPPFLAGS} -march=x86-64-v2 -mtune=westmere"
                   -DPLUGIN_TOKUDB=NO \
                   -DPLUGIN_SPIDER=NO \
                   -DPLUGIN_SPHINX=NO \
-                  -DCPACK_PACKAGING_INSTALL_PREFIX=/ ../mariadb-server-mariadb-%{version}
+                  -DCPACK_PACKAGING_INSTALL_PREFIX=/ ../mariadb-server-mariadb-%{mariadb_version}
 make %{?_smp_mflags}
 
 %install
