@@ -4,9 +4,7 @@ ARCH	:= $(shell rpm --eval "%{_arch}")
 VERSION	?= $(shell rpmspec -q --queryformat="%{version}" MariaDB.spec)
 RELEASE	?= $(shell rpmspec -q --queryformat="%{release}" MariaDB.spec)
 
-EL8_SRPM_FILE	:= $(BUILDDIR)/results/SRPMS/MariaDB-$(VERSION)-$(RELEASE).el8.src.rpm
-EL9_SRPM_FILE	:= $(BUILDDIR)/results/SRPMS/MariaDB-$(VERSION)-$(RELEASE).el9.src.rpm
-SRPM_FILES		:= $(EL8_SRPM_FILE) $(EL9_SRPM_FILE)
+SRPM_FILE		:= $(BUILDDIR)/results/SRPMS/MariaDB-$(VERSION)-$(RELEASE).src.rpm
 RPM_FILES		:= $(BUILDDIR)/results/RPMS/MariaDB-common-$(VERSION)-$(RELEASE).el8.$(ARCH).rpm \
 					$(BUILDDIR)/results/RPMS/MariaDB-common-$(VERSION)-$(RELEASE).el9.$(ARCH).rpm \
 					$(BUILDDIR)/results/RPMS/MariaDB-server-$(VERSION)-$(RELEASE).el8.$(ARCH).rpm \
@@ -34,31 +32,27 @@ RPM_FILES		:= $(BUILDDIR)/results/RPMS/MariaDB-common-$(VERSION)-$(RELEASE).el8.
 all: srpm rpm
 
 .PHONY: srpm
-srpm: $(SRPM_FILES)
+srpm: $(SRPM_FILE)
 
-$(SRPM_FILES):
+$(SRPM_FILE):
 	mkdir -vp $(BUILDDIR)/rpmbuild/{SOURCES,SPECS,BUILD,SRPMS,RPMS}
-	mkdir -vp $(BUILDDIR)/mock
-	mkdir -vp $(shell dirname $(EL8_SRPM_FILE))
-	mkdir -vp $(shell dirname $(EL9_SRPM_FILE))
+	mkdir -vp $(shell dirname $(SRPM_FILE))
 
 	cp MariaDB.spec $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec
 	sed -i -E 's/%\{\??_version\}/$(VERSION)/g' $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec
 	sed -i -E 's/%\{\??_release\}/$(RELEASE)/g' $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec
 	cp *.patch $(BUILDDIR)/rpmbuild/SOURCES/
 	spectool -C $(BUILDDIR)/rpmbuild/SOURCES -g $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec
-	mock --buildsrpm -r ssm-8-$(ARCH) --define "debug_package %{nil}" --spec $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec --sources $(BUILDDIR)/rpmbuild/SOURCES/ --resultdir $(BUILDDIR)/mock
-	mv $(BUILDDIR)/mock/$(shell basename $(EL8_SRPM_FILE)) $(EL8_SRPM_FILE)
-	mock --buildsrpm -r ssm-9-$(ARCH) --define "debug_package %{nil}" --spec $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec --sources $(BUILDDIR)/rpmbuild/SOURCES/ --resultdir $(BUILDDIR)/mock
-	mv $(BUILDDIR)/mock/$(shell basename $(EL9_SRPM_FILE)) $(EL9_SRPM_FILE)
+	rpmbuild -bs --undefine dist --define "debug_package %{nil}" --define "_topdir $(BUILDDIR)/rpmbuild" $(BUILDDIR)/rpmbuild/SPECS/MariaDB.spec
+	mv $(BUILDDIR)/rpmbuild/SRPMS/$(shell basename $(SRPM_FILE)) $(SRPM_FILE)
 
 .PHONY: rpm
 rpm: $(RPM_FILES)
 
-$(RPM_FILES): $(SRPM_FILES)
+$(RPM_FILES): $(SRPM_FILE)
 	mkdir -vp $(BUILDDIR)/mock
-	mock -r ssm-8-$(ARCH) --resultdir $(BUILDDIR)/mock --rebuild $(EL8_SRPM_FILE)
-	mock -r ssm-9-$(ARCH) --resultdir $(BUILDDIR)/mock --rebuild $(EL9_SRPM_FILE)
+	mock -r ssm-8-$(ARCH) --resultdir $(BUILDDIR)/mock --rebuild $(SRPM_FILE)
+	mock -r ssm-9-$(ARCH) --resultdir $(BUILDDIR)/mock --rebuild $(SRPM_FILE)
 
 	for rpm_file in $(RPM_FILES); do \
 		mkdir -vp $$(dirname $${rpm_file}); \
